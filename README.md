@@ -1,4 +1,4 @@
-# LawConn-Cameroon
+# LawConn-Cameroon with Cloud Saas components
 LawConn Cameroon is a proposed cloud-based Platform designed to improve legal awareness among Cameroonian citizens and simplify access to professional legal assistance. The project addresses the lack of accessible and up-to-date legal information by offering an online platform that centralizes national laws, citizens’ rights, and lawyer contacts. Users will browse categorized texts of laws, get advisory services from accredited lawyers, and participate in interactive forums. It uses distributed cloud computing to provide scalability, high availability, and fault tolerance. This report presents the problem context, goals, architecture, system design, technology stack, and 4-month implementation schedule. The solution guarantees a reliable, collaborative, and safe system customized to the Cameroonian environment while enhancing digital transformation of justice.
 ## Introduction
 In the past years, the accelerated digital revolution in Cameroon hasn't been followed by corresponding access to good-quality legal information. Most civilians have no knowledge of what their rights have evolved into or no access to affordably consulting legal professionals in due course. Access to an inclusive, transparent, and easily navigable legal information system has become paramount to individuals and enterprises alike.
@@ -39,8 +39,8 @@ They will rely on a distributed cloud infrastructure to achieve both fault toler
 ## Technology Stack Proposal
 * Frontend: React.js for web, Bootstrap for responsiveness.
 * Backend: Node.js with Express or Python's Flask for API services.
-* Database: PostgreSQL (for relational data) and MongoDB (for unstructured data).
-* Cloud Provider: AWS or Oracle Cloud Infrastructure (OCI) for load balancing, storage, and hosting.
+* Database: 
+* Cloud Provider:
 * Message Queue: AWS SQS or RabbitMQ to communicate asynchronously.
 * Authentication: OAuth2.0 and JSON Web Tokens (JWT).
 * Monitoring: CloudWatch or Prometheus to monitor performance.
