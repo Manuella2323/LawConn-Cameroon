@@ -18,6 +18,7 @@ class FileChunk:
     checksum: str
     status: TransferStatus = TransferStatus.PENDING
     stored_node: Optional[str] = None
+    bandwidth_used_bps: int = 0  # Bandwidth used during transfer (in bits per second)
 
 @dataclass
 class FileTransfer:
@@ -28,6 +29,7 @@ class FileTransfer:
     status: TransferStatus = TransferStatus.PENDING
     created_at: float = time.time()
     completed_at: Optional[float] = None
+    next_chunk_index: int = 0
 
 class StorageVirtualNode:
     def __init__(
@@ -43,6 +45,8 @@ class StorageVirtualNode:
         self.memory_capacity = memory_capacity
         self.total_storage = storage_capacity * 1024 * 1024 * 1024  # Convert GB to bytes
         self.bandwidth = bandwidth * 1000000  # Convert Mbps to bits per second
+        # Network address (dynamically assigned by network)
+        self.address: Optional[str] = None
         
         # Current utilization
         self.used_storage = 0
@@ -145,12 +149,15 @@ class StorageVirtualNode:
         transfer_time = chunk_size_bits / available_bandwidth
         time.sleep(transfer_time)  # Simulate transfer delay
         
+        # Track bandwidth used for this chunk (for later release)
+        chunk.bandwidth_used_bps = int(available_bandwidth * 0.8)
+        
         # Update chunk status
         chunk.status = TransferStatus.COMPLETED
         chunk.stored_node = self.node_id
         
-        # Update metrics
-        self.network_utilization += available_bandwidth * 0.8  # Simulate some fluctuation
+        # Update metrics - track bandwidth used
+        self.network_utilization += chunk.bandwidth_used_bps
         self.total_data_transferred += chunk.size
         
         # Check if all chunks are completed
@@ -158,6 +165,9 @@ class StorageVirtualNode:
             transfer.status = TransferStatus.COMPLETED
             transfer.completed_at = time.time()
             self.used_storage += transfer.total_size
+            # Release bandwidth used by all chunks in this transfer
+            bandwidth_to_release = sum(c.bandwidth_used_bps for c in transfer.chunks)
+            self.network_utilization = max(0, self.network_utilization - bandwidth_to_release)
             self.stored_files[file_id] = transfer
             del self.active_transfers[file_id]
             self.total_requests_processed += 1
